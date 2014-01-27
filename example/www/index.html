@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title>Ionic Seed App</title>
+
+    <!-- ionic css -->
+    <link href="lib/css/ionic.css" rel="stylesheet">
+
+    <!-- your app's css -->
+    <link href="css/app.css" rel="stylesheet">
+
+    <!-- angularjs scripts -->
+    <script src="lib/js/ionic.js"></script>
+    <script src="lib/js/angular/angular.js"></script>
+    <script src="lib/js/angular/angular-animate.js"></script>
+    <script src="lib/js/angular/angular-sanitize.js"></script>
+    <script src="lib/js/angular/angular-touch.js"></script>
+    <script src="lib/js/angular-ui/angular-ui-router.js"></script>
+    <script src="lib/js/ionic-angular.js"></script>
+
+    <!-- cordova script -->
+    <script src="cordova.js"></script>
+
+    <!-- your app's script -->
+    <script src="js/app.js"></script>
+    <script src="js/ionic.cards.js"></script>
+    <script src="js/services.js"></script>
+    <script src="js/controllers.js"></script>
+  </head>
+
+  <!-- 
+    'starter' is the name of this angular module (js/app.js)
+  -->
+  <body ng-app="starter" animation="slide-left-right-ios7" no-scroll>
+    <pane ng-controller="CardsCtrl">
+      <header-bar type="bar-transparent" title="'Help out'"></header-bar>
+
+      <swipe-cards on-swipe="onSwipe($event)">
+        <swipe-card on-swipe="cardSwiped()" id="start-card">
+          Swipe down for a new card
+        </swipe-card>
+        <swipe-card ng-repeat="card in cards" on-swipe="cardSwiped()">
+          <div ng-controller="CardCtrl">
+            <div class="title">
+              {{card.title}}
+            </div>
+            <div class="image">
+              <img ng-src="{{card.image}}">
+            </div>
+            <div class="button-bar">
+              <button class="button button-clear button-positive" ng-click="goAway()">Answer</button>
+              <button class="button button-clear button-positive" ng-click="goAway()">Decline</button>
+            </div>
+          </div>
+        </swipe-card>
+      </swipe-cards>
+    </pane>
+  </body>
+</html>
