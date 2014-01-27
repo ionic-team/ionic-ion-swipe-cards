@@ -188,6 +188,11 @@
         this.el.style[TRANSITION] = '-webkit-transform ' + duration + 's ease-in-out';
         this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.x + ',' + (window.innerHeight * 1.5) + 'px, 0) rotate(' + rotateTo + 'rad)';
         this.onSwipe && this.onSwipe();
+
+        // Trigger destroy after card has swiped out
+        setTimeout(function() {
+          self.onDestroy && self.onDestroy();
+        }, duration * 1000);
       }
     },
 
@@ -266,7 +271,8 @@
       replace: true,
       transclude: true,
       scope: {
-        onSwipe: '&'
+        onSwipe: '&',
+        onDestroy: '&'
       },
       compile: function(element, attr) {
         return function($scope, $element, $attr, swipeCards) {
@@ -279,7 +285,12 @@
               $timeout(function() {
                 $scope.onSwipe();
               });
-            }
+            },
+            onDestroy: function() {
+              $timeout(function() {
+                $scope.onDestroy();
+              });
+            },
           });
           $scope.$parent.swipeCard = swipeableCard;
 

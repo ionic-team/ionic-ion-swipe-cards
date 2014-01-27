@@ -51,9 +51,12 @@ angular.module('starter', ['ionic', 'ngTouch', 'ionic.contrib.ui.cards'])
 
   $scope.cards = Array.prototype.slice.call(cardTypes, 0, 0);
 
-  $scope.cardSwiped = function(e) {
-    console.log('SWIPED');
+  $scope.cardSwiped = function(index) {
     $scope.addCard();
+  };
+
+  $scope.cardDestroyed = function(index) {
+    $scope.cards.splice(index, 1);
   };
 
   $scope.addCard = function() {
