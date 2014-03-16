@@ -208,15 +208,15 @@
         } else {
           self._transformOriginLeft();
         }
-        window.rAF(function() { self._doDragStart(e) });
+        window._rAF(function() { self._doDragStart(e) });
       }, this.el);
 
       ionic.onGesture('drag', function(e) {
-        window.rAF(function() { self._doDrag(e) });
+        window._rAF(function() { self._doDrag(e) });
       }, this.el);
 
       ionic.onGesture('dragend', function(e) {
-        window.rAF(function() { self._doDragEnd(e) });
+        window._rAF(function() { self._doDragEnd(e) });
       }, this.el);
     },
 
@@ -253,7 +253,7 @@
 
       this.y = this.startY + (e.gesture.deltaY * 0.4);
 
-      this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.x + 'px, ' + this.y  + 'px, 0) rotate(' + (this.rotationAngle || 0) + 'rad)';
+      this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.x + 'px, ' + this.y  + 'px, 0) rotate(' + (this.rotationAngle) + 'rad)';
     },
     _doDragEnd: function(e) {
       this.transitionOut(e);
