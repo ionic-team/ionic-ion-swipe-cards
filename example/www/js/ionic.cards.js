@@ -247,9 +247,9 @@
 
       this.rotationAngle = Math.atan(o/this.touchDistance) * this.rotationDirection;
 
-      // if(e.gesture.deltaY < 0) {
-      //   this.rotationAngle = 0;
-      // }
+      if(e.gesture.deltaY < 0) {
+        this.rotationAngle = 0;
+      }
 
       this.y = this.startY + (e.gesture.deltaY * 0.4);
 
