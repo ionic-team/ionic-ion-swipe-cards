@@ -172,10 +172,10 @@
     /**
      * Fly the card out or animate back into resting position.
      */
-    transitionOut: function() {
+    transitionOut: function(e) {
       var self = this;
 
-      if(this.y < 0) {
+      if(e.gesture.deltaY < window.innerWidth / 3) {
         this.el.style[TRANSITION] = '-webkit-transform 0.2s ease-in-out';
         this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.x + ',' + (this.startY) + 'px, 0)';
         setTimeout(function() {
