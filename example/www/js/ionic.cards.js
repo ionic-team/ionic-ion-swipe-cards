@@ -165,17 +165,16 @@
     /**
      * Swipe a card out programtically
      */
-    swipe: function(slideUp) {
-      this.transitionOut(slideUp);
+    swipe: function(positive) {
+      this.transitionOut(positive);
     },
 
     /**
      * Fly the card up or down.
      */
-    transitionOut: function(slideUp) {
+    transitionOut: function(positive) {
       var self = this;
-
-      if((slideUp === true) || (this.y < 0)) {
+      if((positive === true) || (this.y < 0)) {
         // Fly up
         var rotateTo = (this.rotationAngle + (this.rotationDirection * 0.6)) || (Math.random() * 0.4);
         var duration = this.rotationAngle ? 0.2 : 0.5;
@@ -319,7 +318,6 @@
       controller: function($scope, $element) {
         var swipeController = new SwipeableCardController({
         });
-
         $rootScope.$on('swipeCard.pop', function(isAnimated) {
           swipeController.popCard(isAnimated);
         });
