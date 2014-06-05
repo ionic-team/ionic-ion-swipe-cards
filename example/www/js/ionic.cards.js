@@ -165,30 +165,38 @@
     /**
      * Swipe a card out programtically
      */
-    swipe: function() {
-      this.transitionOut();
+    swipe: function(slideUp) {
+      this.transitionOut(slideUp);
     },
 
     /**
-     * Fly the card out or animate back into resting position.
+     * Fly the card up or down.
      */
-    transitionOut: function() {
+    transitionOut: function(slideUp) {
       var self = this;
 
-      if(this.y < 0) {
-        this.el.style[TRANSITION] = '-webkit-transform 0.2s ease-in-out';
-        this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.x + ',' + (this.startY) + 'px, 0)';
+      if((slideUp === true) || (this.y < 0)) {
+        // Fly up
+        var rotateTo = (this.rotationAngle + (this.rotationDirection * 0.6)) || (Math.random() * 0.4);
+        var duration = this.rotationAngle ? 0.2 : 0.5;
+        this.el.style[TRANSITION] = '-webkit-transform ' + duration + 's ease-in-out';
+        this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.x + ',' + (window.innerHeight * -1.5) + 'px, 0) rotate(' + rotateTo + 'rad)';
+        this.onSwipe && this.onSwipe();
+
+        self.positive = true;
+        // Trigger destroy after card has swiped out
         setTimeout(function() {
-          self.el.style[TRANSITION] = 'none';
-        }, 200);
+          self.onDestroy && self.onDestroy(true);
+        }, duration * 1000);
       } else {
-        // Fly out
+        // Fly down
         var rotateTo = (this.rotationAngle + (this.rotationDirection * 0.6)) || (Math.random() * 0.4);
         var duration = this.rotationAngle ? 0.2 : 0.5;
         this.el.style[TRANSITION] = '-webkit-transform ' + duration + 's ease-in-out';
         this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.x + ',' + (window.innerHeight * 1.5) + 'px, 0) rotate(' + rotateTo + 'rad)';
         this.onSwipe && this.onSwipe();
 
+        self.positive = false;
         // Trigger destroy after card has swiped out
         setTimeout(function() {
           self.onDestroy && self.onDestroy();
