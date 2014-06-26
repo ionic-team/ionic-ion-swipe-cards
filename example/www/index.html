@@ -38,10 +38,10 @@
       <header-bar type="bar-transparent" title="'Help out'"></header-bar>
 
       <swipe-cards>
-        <swipe-card on-swipe="cardSwiped()" id="start-card">
-          Swipe down for a new card
+        <swipe-card on-swipe-left="cardSwiped()" on-swipe-right="cardSwiped()" id="start-card">
+          Swipe left or right for a new card
         </swipe-card>
-        <swipe-card ng-repeat="card in cards" on-destroy="cardDestroyed($index)" on-swipe="cardSwiped($index)">
+        <swipe-card ng-repeat="card in cards" on-destroy="cardDestroyed($index)" on-swipe-left="cardSwiped($index)" on-swipe-right="cardSwiped($index)">
           <div ng-controller="CardCtrl">
             <div class="title">
               {{card.title}}
