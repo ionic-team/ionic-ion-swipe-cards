@@ -165,35 +165,44 @@
     /**
      * Swipe a card out programtically
      */
-    swipe: function() {
-      this.transitionOut();
+    swipeRight: function() {
+      this.transitionOut(true);
+    },
+    swipeLeft: function() {
+      this.transitionOut(false);
     },
 
     /**
      * Fly the card out or animate back into resting position.
      */
-    transitionOut: function() {
+    transitionOut: function(right) {
       var self = this;
-
-      if(this.y < 0) {
-        this.el.style[TRANSITION] = '-webkit-transform 0.2s ease-in-out';
-        this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.x + ',' + (this.startY) + 'px, 0)';
-        setTimeout(function() {
-          self.el.style[TRANSITION] = 'none';
-        }, 200);
-      } else {
-        // Fly out
         var rotateTo = (this.rotationAngle + (this.rotationDirection * 0.6)) || (Math.random() * 0.4);
         var duration = this.rotationAngle ? 0.2 : 0.5;
-        this.el.style[TRANSITION] = '-webkit-transform ' + duration + 's ease-in-out';
-        this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.x + ',' + (window.innerHeight * 1.5) + 'px, 0) rotate(' + rotateTo + 'rad)';
-        this.onSwipe && this.onSwipe();
+        this.el.style[TRANSITION] = '-webkit-transform '+duration+'s ease-in-out';
+        this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + (right ? '-':'')+(window.innerHeight * 1.5) + 'px ,' + this.y + 'px, 0) rotate(' + rotateTo + 'rad)';
+        !right && this.onSwipeLeft && this.onSwipeLeft();
+        right && this.onSwipeRight && this.onSwipeRight();
 
         // Trigger destroy after card has swiped out
         setTimeout(function() {
           self.onDestroy && self.onDestroy();
-        }, duration * 1000);
-      }
+        }, 200);
+    },
+    
+    /**
+     * Fly the card out or animate back into resting position.
+     */
+    transitionBack: function() {
+      var self = this;
+      var duration = this.rotationAngle ? 0.2 : 0.5;
+      this.el.style[TRANSITION] = '-webkit-transform '+duration+'s ease-in-out';
+      this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.startX + 'px ,' + this.y + 'px, 0)';
+
+      // Trigger destroy after card has swiped out
+      setTimeout(function() {
+        this.el.style[TRANSITION] = 'none';
+      }, 200);
     },
 
     /**
@@ -208,15 +217,15 @@
         } else {
           self._transformOriginLeft();
         }
-        window.rAF(function() { self._doDragStart(e) });
+        window._rAF(function() { self._doDragStart(e) });
       }, this.el);
 
       ionic.onGesture('drag', function(e) {
-        window.rAF(function() { self._doDrag(e) });
+        window._rAF(function() { self._doDrag(e) });
       }, this.el);
 
       ionic.onGesture('dragend', function(e) {
-        window.rAF(function() { self._doDragEnd(e) });
+        window._rAF(function() { self._doDragEnd(e) });
       }, this.el);
     },
 
@@ -243,20 +252,20 @@
     },
 
     _doDrag: function(e) {
-      var o = e.gesture.deltaY / 3;
+      var o = e.gesture.deltaX / 3;
 
       this.rotationAngle = Math.atan(o/this.touchDistance) * this.rotationDirection;
 
-      if(e.gesture.deltaY < 0) {
-        this.rotationAngle = 0;
-      }
-
-      this.y = this.startY + (e.gesture.deltaY * 0.4);
+      this.x = this.startX + (e.gesture.deltaX * 0.4);
 
       this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.x + 'px, ' + this.y  + 'px, 0) rotate(' + (this.rotationAngle || 0) + 'rad)';
     },
     _doDragEnd: function(e) {
-      this.transitionOut(e);
+      if(Math.abs(this.x - this.startX) < 75) {
+        this.transitionBack(e);
+      } else {
+        this.transitionOut(this.x < 0);
+      }
     }
   });
 
@@ -271,7 +280,8 @@
       replace: true,
       transclude: true,
       scope: {
-        onSwipe: '&',
+        onSwipeLeft: '&',
+        onSwipeRight: '&',
         onDestroy: '&'
       },
       compile: function(element, attr) {
@@ -281,9 +291,14 @@
           // Instantiate our card view
           var swipeableCard = new SwipeableCardView({
             el: el,
-            onSwipe: function() {
+            onSwipeLeft: function() {
               $timeout(function() {
-                $scope.onSwipe();
+                $scope.onSwipeLeft();
+              });
+            },
+            onSwipeRight: function() {
+              $timeout(function() {
+                $scope.onSwipeRight();
               });
             },
             onDestroy: function() {
@@ -333,3 +348,4 @@
   }]);
 
 })(window.ionic);
+
