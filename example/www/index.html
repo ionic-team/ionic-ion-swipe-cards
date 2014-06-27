@@ -30,13 +30,13 @@
     <script src="js/controllers.js"></script>
   </head>
 
-  <!-- 
+  <!--
     'starter' is the name of this angular module (js/app.js)
   -->
   <body ng-app="starter" animation="slide-left-right-ios7" no-scroll>
     <pane ng-controller="CardsCtrl">
       <header-bar type="bar-transparent" title="'Help out'"></header-bar>
-
+      <p style="color:white">Accepted: {{accepted}}, Rejected: {{rejected}}</p>
       <swipe-cards>
         <swipe-card on-swipe="cardSwiped()" id="start-card">
           Swipe down for a new card
@@ -50,8 +50,8 @@
               <img ng-src="{{card.image}}">
             </div>
             <div class="button-bar">
-              <button class="button button-clear button-positive" ng-click="goAway()">Answer</button>
-              <button class="button button-clear button-positive" ng-click="goAway()">Decline</button>
+              <button class="button button-clear button-positive" ng-click="reject()">No</button>
+              <button class="button button-clear button-positive" ng-click="accept()">Yes</button>
             </div>
           </div>
         </swipe-card>
