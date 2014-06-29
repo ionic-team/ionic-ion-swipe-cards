@@ -197,7 +197,7 @@
       var self = this;
       var duration = this.rotationAngle ? 0.2 : 0.5;
       this.el.style[TRANSITION] = '-webkit-transform '+duration+'s ease-in-out';
-      this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.startX + 'px ,' + this.y + 'px, 0)';
+      this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.startX + 'px ,' + this.startY + 'px, 0)';
 
       // Trigger destroy after card has swiped out
       setTimeout(function() {
@@ -257,7 +257,7 @@
       this.rotationAngle = Math.atan(o/this.touchDistance) * this.rotationDirection;
 
       this.x = this.startX + (e.gesture.deltaX * 0.4);
-
+      this.y = this.startY + (e.gesture.deltaY * 0.4);
       this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.x + 'px, ' + this.y  + 'px, 0) rotate(' + (this.rotationAngle || 0) + 'rad)';
     },
     _doDragEnd: function(e) {
@@ -348,4 +348,3 @@
   }]);
 
 })(window.ionic);
-
