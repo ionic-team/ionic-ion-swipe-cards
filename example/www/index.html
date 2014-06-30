@@ -37,10 +37,15 @@
 
       <swipe-cards>
         <swipe-card on-swipe-left="cardSwiped()" on-swipe-right="cardSwiped()" id="start-card">
-          Swipe left or right for a new card
+          <div class="front">
+            Swipe left or right for a new card. Tap to flip
+          </div>
+          <div class="back">
+            Tap to flip back. Swipe left or right for a new card
+          </div>
         </swipe-card>
         <swipe-card ng-repeat="card in cards" on-destroy="cardDestroyed($index)" on-swipe-left="cardSwiped($index)" on-swipe-right="cardSwiped($index)">
-          <div ng-controller="CardCtrl">
+          <div ng-controller="CardCtrl" class="front">
             <div class="title">
               {{card.title}}
             </div>
@@ -51,6 +56,9 @@
               <button class="button button-clear button-positive" ng-click="goAway()">Answer</button>
               <button class="button button-clear button-positive" ng-click="goAway()">Decline</button>
             </div>
+          </div>
+          <div class="back">
+            Tap to flip back
           </div>
         </swipe-card>
       </swipe-cards>

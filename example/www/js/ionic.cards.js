@@ -64,6 +64,7 @@
       // Move each card 5 pixels down to give a nice stacking effect (max of 3 stacked)
       nextCard.setPopInDuration(this.cardPopInDuration);
       nextCard.setZIndex(this.cards.length);
+      nextCard.el.style.maxHeight  = (window.innerHeight / this.cards.length) + 'px';
     },
     /**
      * Pop a card from the stack
@@ -254,16 +255,34 @@
     
     _doTap: function(e) {
       if(this.gestureEnabled) {
+      	var self = this;
         this.el.style[TRANSFORM_ORIGIN] = 'center center';
         this.el.style[TRANSITION] = '-webkit-transform 0.5s ease-in-out';
         if(!this.flipped) {
         	this.el.style[ionic.CSS.TRANSFORM] = 'rotate'+((this.el.offsetWidth > this.el.offsetHeight) ? 'X':'Y')+'(180deg)';
         	this.flipped = true;
-        	this.onFlipFront && this.onFlipFront();
+        	setTimeout(function() {
+        		for(var i = 0, elements = self.el.getElementsByClassName('front'); i < elements.length; i++) {
+        			elements[i].style.display = 'none';
+        		}
+        		for(var i = 0, elements = self.el.getElementsByClassName('back'); i < elements.length; i++) {
+        			elements[i].style.display = 'block';
+        			elements[i].style[ionic.CSS.TRANSFORM] = 'rotate'+((self.el.offsetWidth > self.el.offsetHeight) ? 'X':'Y')+'(180deg)';
+        		}
+        		self.onFlipFront && self.onFlipFront();	
+        	}, 250);
         } else {
         	this.el.style[ionic.CSS.TRANSFORM] = 'rotate'+((this.el.offsetWidth > this.el.offsetHeight) ? 'X':'Y')+'(0deg)';
         	this.flipped = false;
-        	this.onFlipBack && this.onFlipBack();
+        	setTimeout(function() {
+        		for(var i = 0, elements = self.el.getElementsByClassName('front'); i < elements.length; i++) {
+        			elements[i].style.display = 'block';
+        		}
+        		for(var i = 0, elements = self.el.getElementsByClassName('back'); i < elements.length; i++) {
+        			elements[i].style.display = 'none';
+        		}
+        		self.onFlipBack && self.onFlipBack();	
+        	}, 250);
         }
       }
       this.enableGesture(true);
@@ -298,6 +317,7 @@
     _doDragEnd: function(e) {
       if(Math.abs(this.x - this.startX) < 75) {
         this.transitionBack(e);
+        this.el.style[TRANSITION] = '-webkit-transform 0.5s ease-in-out';
       } else {
         this.transitionOut(this.x < 0);
       }
@@ -307,7 +327,7 @@
 
   angular.module('ionic.contrib.ui.cards', ['ionic'])
 
-  .directive('swipeCard', ['$timeout', function($timeout) {
+  .directive('swipeCard', ['$timeout', '$rootScope', function($timeout, $rootScope) {
     return {
       restrict: 'E',
       template: '<div class="swipe-card" ng-transclude></div>',
@@ -317,6 +337,8 @@
       scope: {
         onSwipeLeft: '&',
         onSwipeRight: '&',
+        onFlipFront: '&',
+        onFlipBack: '&',
         onDestroy: '&'
       },
       compile: function(element, attr) {
@@ -328,11 +350,13 @@
             el: el,
             onSwipeLeft: function() {
               $timeout(function() {
+        $rootScope.$emit('swipeCard.pop');
                 $scope.onSwipeLeft();
               });
             },
             onSwipeRight: function() {
               $timeout(function() {
+        $rootScope.$emit('swipeCard.pop');
                 $scope.onSwipeRight();
               });
             },
@@ -372,8 +396,8 @@
         var swipeController = new SwipeableCardController({
         });
 
-        $rootScope.$on('swipeCard.pop', function(isAnimated) {
-          swipeController.popCard(isAnimated);
+        $rootScope.$on('swipeCard.pop', function() {
+          swipeController.popCard();
         });
 
         return swipeController;
@@ -383,11 +407,15 @@
 
   .factory('$ionicSwipeCardDelegate', ['$rootScope', function($rootScope) {
     return {
-      popCard: function($scope, isAnimated) {
-        $rootScope.$emit('swipeCard.pop', isAnimated);
+      swipeLeft: function($scope) {
+        $rootScope.$emit('swipeCard.pop');
+        $scope.$parent.swipeCard.swipeLeft();
+      },
+      swipeRight: function($scope) {
+        $rootScope.$emit('swipeCard.pop');
+        $scope.$parent.swipeCard.swipeRight();
       },
       getSwipebleCard: function($scope) {
-      	console.log($scope.$parent);
         return $scope.$parent.swipeCard;
       }
     }
