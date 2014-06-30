@@ -165,30 +165,37 @@
     /**
      * Swipe a card out programtically
      */
-    swipe: function() {
-      this.transitionOut();
+    swipe: function(positive) {
+      this.transitionOut(positive);
     },
 
     /**
-     * Fly the card out or animate back into resting position.
+     * Fly the card up or down.
      */
-    transitionOut: function() {
+    transitionOut: function(positive) {
       var self = this;
+      if((positive === true) || (this.x > 0)) {
+        // Fly right
+        var rotateTo = (this.rotationAngle + (this.rotationDirection * 0.6)) || (Math.random() * -0.4);
+        var duration = this.rotationAngle ? 0.2 : 0.5;
+        this.el.style[TRANSITION] = '-webkit-transform ' + duration + 's ease-in-out';
+        this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + (window.innerWidth * 1.5) + 'px,' + this.y + 'px, 0) rotate(' + rotateTo + 'rad)';
+        this.onSwipe && this.onSwipe();
 
-      if(this.y < 0) {
-        this.el.style[TRANSITION] = '-webkit-transform 0.2s ease-in-out';
-        this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.x + ',' + (this.startY) + 'px, 0)';
+        self.positive = true;
+        // Trigger destroy after card has swiped out
         setTimeout(function() {
-          self.el.style[TRANSITION] = 'none';
-        }, 200);
+          self.onDestroy && self.onDestroy(true);
+        }, duration * 1000);
       } else {
-        // Fly out
+        // Fly left
         var rotateTo = (this.rotationAngle + (this.rotationDirection * 0.6)) || (Math.random() * 0.4);
         var duration = this.rotationAngle ? 0.2 : 0.5;
         this.el.style[TRANSITION] = '-webkit-transform ' + duration + 's ease-in-out';
-        this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.x + ',' + (window.innerHeight * 1.5) + 'px, 0) rotate(' + rotateTo + 'rad)';
+        this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + (window.innerWidth * -1.5) + 'px,' + this.y + 'px, 0) rotate(' + rotateTo + 'rad)';
         this.onSwipe && this.onSwipe();
 
+        self.positive = false;
         // Trigger destroy after card has swiped out
         setTimeout(function() {
           self.onDestroy && self.onDestroy();
@@ -208,15 +215,15 @@
         } else {
           self._transformOriginLeft();
         }
-        window.rAF(function() { self._doDragStart(e) });
+        window._rAF(function() { self._doDragStart(e) });
       }, this.el);
 
       ionic.onGesture('drag', function(e) {
-        window.rAF(function() { self._doDrag(e) });
+        window._rAF(function() { self._doDrag(e) });
       }, this.el);
 
       ionic.onGesture('dragend', function(e) {
-        window.rAF(function() { self._doDragEnd(e) });
+        window._rAF(function() { self._doDragEnd(e) });
       }, this.el);
     },
 
@@ -234,7 +241,7 @@
     _doDragStart: function(e) {
       var width = this.el.offsetWidth;
       var point = window.innerWidth / 2 + this.rotationDirection * (width / 2)
-      var distance = Math.abs(point - e.gesture.touches[0].pageX);// - window.innerWidth/2);
+      var distance = Math.abs(point - e.gesture.touches[0].pageY);// - window.innerWidth/2);
       console.log(distance);
 
       this.touchDistance = distance * 10;
@@ -243,15 +250,15 @@
     },
 
     _doDrag: function(e) {
-      var o = e.gesture.deltaY / 3;
+      var o = e.gesture.deltaX / 3;
 
       this.rotationAngle = Math.atan(o/this.touchDistance) * this.rotationDirection;
 
-      if(e.gesture.deltaY < 0) {
+      if(e.gesture.deltaX < 0) {
         this.rotationAngle = 0;
       }
 
-      this.y = this.startY + (e.gesture.deltaY * 0.4);
+      this.x = this.startX + (e.gesture.deltaX * 0.4);
 
       this.el.style[ionic.CSS.TRANSFORM] = 'translate3d(' + this.x + 'px, ' + this.y  + 'px, 0) rotate(' + (this.rotationAngle || 0) + 'rad)';
     },
@@ -311,7 +318,6 @@
       controller: function($scope, $element) {
         var swipeController = new SwipeableCardController({
         });
-
         $rootScope.$on('swipeCard.pop', function(isAnimated) {
           swipeController.popCard(isAnimated);
         });

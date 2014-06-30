@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ngTouch', 'ionic.contrib.ui.cards'])
+angular.module('starter', ['ionic', 'ionic.contrib.ui.cards'])
 
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -40,7 +40,9 @@ angular.module('starter', ['ionic', 'ngTouch', 'ionic.contrib.ui.cards'])
   }
 })
 
-.controller('CardsCtrl', function($scope, $ionicSwipeCardDelegate) {
+.controller('CardsCtrl', function($scope, $ionicSwipeCardDelegate, $rootScope) {
+  $rootScope.accepted = 0;
+  $rootScope.rejected = 0;
   var cardTypes = [
     { title: 'Swipe down to clear the card', image: 'img/pic.png' },
     { title: 'Where is this?', image: 'img/pic.png' },
@@ -56,6 +58,11 @@ angular.module('starter', ['ionic', 'ngTouch', 'ionic.contrib.ui.cards'])
   };
 
   $scope.cardDestroyed = function(index) {
+    if (this.swipeCard.positive === true) {
+      $scope.$root.accepted++;
+    } else {
+      $scope.$root.rejected++;
+    }
     $scope.cards.splice(index, 1);
   };
 
@@ -66,9 +73,15 @@ angular.module('starter', ['ionic', 'ngTouch', 'ionic.contrib.ui.cards'])
   }
 })
 
-.controller('CardCtrl', function($scope, $ionicSwipeCardDelegate) {
-  $scope.goAway = function() {
+.controller('CardCtrl', function($scope, $ionicSwipeCardDelegate, $rootScope) {
+  $scope.accept = function () {
     var card = $ionicSwipeCardDelegate.getSwipebleCard($scope);
+    $rootScope.accepted++;
+    card.swipe(true);
+  }
+  $scope.reject = function() {
+    var card = $ionicSwipeCardDelegate.getSwipebleCard($scope);
+    $rootScope.rejected++;
     card.swipe();
   };
 });
