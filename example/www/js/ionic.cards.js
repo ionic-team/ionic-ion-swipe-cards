@@ -153,7 +153,7 @@
 
       this.el.classList.add(animationClass + '-start');
       this.el.classList.add(animationClass);
-      this.el.style.display = 'block';
+      this.el.style.display = 'list-item';
       setTimeout(function() {
         self.el.classList.remove(animationClass + '-start');
       }, 100);
@@ -166,24 +166,31 @@
       this.el.classList.remove(animationClass);
     },
     
+    /**
+     * Enable gestures on the card
+     */
     enableGesture: function(enable) {
       this.gestureEnabled = enable;
     },
 
     /**
-     * Swipe a card out programtically
+     * Swipe a card out to the right programmatically
      */
     swipeRight: function() {
       this.enableGesture(false);
       this.transitionOut(false);
     },
+    
+    /**
+     * Swipe a card out to the left programmatically
+     */
     swipeLeft: function() {
       this.enableGesture(false);
       this.transitionOut(true);
     },
 
     /**
-     * Fly the card out or animate back into resting position.
+     * Fly the card out (to the direction it was moved towards).
      */
     transitionOut: function(right) {
       var self = this;
@@ -201,7 +208,7 @@
     },
     
     /**
-     * Fly the card out or animate back into resting position.
+     * Animate the card back into resting position.
      */
     transitionBack: function() {
       var self = this;
@@ -212,7 +219,7 @@
         this.el.style[ionic.CSS.TRANSFORM] += ' rotate'+((this.el.offsetWidth > this.el.offsetHeight) ? 'X':'Y')+'(180deg)';
       }
 
-      // Trigger destroy after card has swiped out
+      // Remove the transition and put the card on top when it has animated back
       setTimeout(function() {
         self.el.style[TRANSITION] = 'none';
         self.el.style.zIndex = 9;
@@ -226,19 +233,19 @@
       var self = this;
       
       ionic.onGesture('release', function(e) {
-        window._rAF(function() { self._doTap(e) });
+        window.requestAnimationFrame(function() { self._doTap(e) });
       }, this.el);
       
       ionic.onGesture('dragstart', function(e) {
-        window._rAF(function() { self._doDragStart(e) });
+        window.requestAnimationFrame(function() { self._doDragStart(e) });
       }, this.el);
 
       ionic.onGesture('drag', function(e) {
-        window._rAF(function() { self._doDrag(e) });
+        window.requestAnimationFrame(function() { self._doDrag(e) });
       }, this.el);
 
       ionic.onGesture('dragend', function(e) {
-        window._rAF(function() { self._doDragEnd(e) });
+        window.requestAnimationFrame(function() { self._doDragEnd(e) });
       }, this.el);
     },
 
@@ -254,6 +261,7 @@
     },
     
     _doTap: function(e) {
+      //Check if we are allowed to perform a gesture
       if(this.gestureEnabled) {
       	var self = this;
         this.el.style[TRANSFORM_ORIGIN] = 'center center';
@@ -262,11 +270,13 @@
         	this.el.style[ionic.CSS.TRANSFORM] = 'rotate'+((this.el.offsetWidth > this.el.offsetHeight) ? 'X':'Y')+'(180deg)';
         	this.flipped = true;
         	setTimeout(function() {
+        		//Hide all the elements with the class 'front'
         		for(var i = 0, elements = self.el.getElementsByClassName('front'); i < elements.length; i++) {
         			elements[i].style.display = 'none';
         		}
+        		//Show all the elements with the class 'back'
         		for(var i = 0, elements = self.el.getElementsByClassName('back'); i < elements.length; i++) {
-        			elements[i].style.display = 'block';
+        			elements[i].style.display = 'list-item';
         			elements[i].style[ionic.CSS.TRANSFORM] = 'rotate'+((self.el.offsetWidth > self.el.offsetHeight) ? 'X':'Y')+'(180deg)';
         		}
         		self.onFlipFront && self.onFlipFront();	
@@ -275,9 +285,11 @@
         	this.el.style[ionic.CSS.TRANSFORM] = 'rotate'+((this.el.offsetWidth > this.el.offsetHeight) ? 'X':'Y')+'(0deg)';
         	this.flipped = false;
         	setTimeout(function() {
+        		//Show all the elements with the class 'front'
         		for(var i = 0, elements = self.el.getElementsByClassName('front'); i < elements.length; i++) {
-        			elements[i].style.display = 'block';
+        			elements[i].style.display = 'list-item';
         		}
+        		//Hide all the elements with the class 'back'
         		for(var i = 0, elements = self.el.getElementsByClassName('back'); i < elements.length; i++) {
         			elements[i].style.display = 'none';
         		}
@@ -350,13 +362,15 @@
             el: el,
             onSwipeLeft: function() {
               $timeout(function() {
-        $rootScope.$emit('swipeCard.pop');
+                //Event trigger to let the rootScope know that the card has been swiped
+                $rootScope.$emit('swipeCard.pop');
                 $scope.onSwipeLeft();
               });
             },
             onSwipeRight: function() {
               $timeout(function() {
-        $rootScope.$emit('swipeCard.pop');
+                //Event trigger to let the rootScope know that the card has been swiped
+                $rootScope.$emit('swipeCard.pop');
                 $scope.onSwipeRight();
               });
             },
