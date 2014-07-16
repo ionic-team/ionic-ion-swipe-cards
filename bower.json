@@ -1,0 +1,27 @@
+{
+  "name": "ionic-contrib-swipe-cards",
+  "version": "1.0.0",
+  "homepage": "https://github.com/DaleWebb/ionic-contrib-swipe-cards",
+  "description": "Tinder-style swiping",
+  "main": "ionic.swipecards.js",
+  "keywords": [
+    "cards",
+    "jelly",
+    "ionic",
+    "tinder",
+    "swipe"
+  ],
+  "authors": [
+    "Max Lynch",
+    "Dale Alexander Webb"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "example",
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

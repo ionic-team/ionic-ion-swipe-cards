@@ -60,6 +60,17 @@
   border-radius: 0px 0px 4px 4px;
 }
 
+.swipe-card .front {
+	display: block;
+	height: inherit;
+}
+
+.swipe-card .back {
+	display: none;
+	background-color: #30BD8A;
+	height: inherit;
+}
+
 #start-card {
   color: #fff;
   background-color: #30BD8A;

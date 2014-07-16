@@ -1,0 +1,46 @@
+{
+  "name": "ionic",
+  "version": "1.0.0-beta.8",
+  "codename": "einsteinium-emu",
+  "homepage": "https://github.com/driftyco/ionic",
+  "authors": [
+    "Max Lynch <max@drifty.com>",
+    "Adam Bradley <adam@drifty.com>",
+    "Ben Sperry <ben@drifty.com>"
+  ],
+  "description": "Advanced HTML5 hybrid mobile app development framework.",
+  "main": [
+    "css/ionic.css",
+    "fonts/*",
+    "js/ionic.js",
+    "js/ionic-angular.js"
+  ],
+  "keywords": [
+    "mobile",
+    "html5",
+    "ionic",
+    "cordova",
+    "phonegap",
+    "trigger",
+    "triggerio",
+    "angularjs",
+    "angular"
+  ],
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "angular": "~1.2.17",
+    "angular-animate": "~1.2.17",
+    "angular-sanitize": "~1.2.17",
+    "angular-ui-router": "0.2.10"
+  },
+  "_release": "1.0.0-beta.8",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.0.0-beta.8",
+    "commit": "1ed3ae279814dc8bae9cc67fee599c916a89c3c2"
+  },
+  "_source": "git://github.com/driftyco/ionic-bower.git",
+  "_target": "1.0.0-beta.8",
+  "_originalSource": "driftyco/ionic-bower"
+}
