@@ -11,7 +11,7 @@ Include `ionic.swipecards.js` after the rest of your Ionic and Angular includes.
 
 ```html
 <swipe-cards>
-  <swipe-card ng-repeat="card in cards" on-destroy="cardDestroyed($index)" on-swipe="cardSwiped($index)">
+  <swipe-card ng-repeat="card in cards" on-destroy="cardDestroyed($index)" on-card-swipe="cardSwiped($index)">
     Card content here
   </swipe-card>
 </swipe-cards>
