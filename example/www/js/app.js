@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ngTouch', 'ionic.contrib.ui.cards'])
+angular.module('starter', ['ionic', 'ionic.contrib.ui.cards'])
 
 
 .config(function($stateProvider, $urlRouterProvider) {
