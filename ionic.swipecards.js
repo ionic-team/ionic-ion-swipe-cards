@@ -23,7 +23,7 @@
     }
   }
 
-  var SwipeableCardController = ionic.controllers.ViewController.inherit({
+  var SwipeableCardController = ionic.views.View.inherit({
     initialize: function(opts) {
       this.cards = [];
 
