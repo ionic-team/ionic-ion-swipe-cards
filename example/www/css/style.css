@@ -25,7 +25,7 @@
   position: fixed;
 }
 
-.swipe-card {
+swipe-card {
   display: none;
   position: fixed;
   -webkit-transform: scale(1,1);
@@ -42,20 +42,20 @@
   -webkit-animation-fill-mode: forwards;
 }
 
-.swipe-card .title {
+swipe-card .title {
   height: 40px;
   padding: 5px;
   line-height: 30px;
   color: #444;
 }
-.swipe-card .image {
+swipe-card .image {
   overflow: hidden;
   max-height: 210px;
 }
-.swipe-card .button {
+swipe-card .button {
   border: none;
 }
-.swipe-card .image img {
+swipe-card .image img {
   width: 100%;
   border-radius: 0px 0px 4px 4px;
 }
@@ -92,9 +92,9 @@
   }
 }
 
-.swipe-card.pop-in-start {
+swipe-card.pop-in-start {
   -webkit-transform: scale(0,0);
 }
-.swipe-card.pop-in {
+swipe-card.pop-in {
   -webkit-animation: bounceIn 0.4s ease-out;
 }

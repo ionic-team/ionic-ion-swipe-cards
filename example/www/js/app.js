@@ -69,7 +69,7 @@ angular.module('starter', ['ionic', 'ionic.contrib.ui.cards'])
 
 .controller('CardCtrl', function($scope, $ionicSwipeCardDelegate) {
   $scope.goAway = function() {
-    var card = $ionicSwipeCardDelegate.getSwipebleCard($scope);
+    var card = $ionicSwipeCardDelegate.getSwipeableCard($scope);
     card.swipe();
   };
 });
