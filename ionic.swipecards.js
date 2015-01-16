@@ -273,7 +273,7 @@
         onCardSwipe: '&',
         onDestroy: '&'
       },
-      link: function($scope, $element, $attr, swipeCards) {
+      link: ['$scope', '$element', '$attr', 'swipeCards', function($scope, $element, $attr, swipeCards) {
         var el = $element[0];
 
         // Instantiate our card view
@@ -294,7 +294,7 @@
 
         swipeCards.swipeController.pushCard(swipeableCard);
 
-      }
+      }]
     }
   }])
 
@@ -304,7 +304,7 @@
       template: '<div class="swipe-cards" ng-transclude></div>',
       transclude: true,
       scope: true,
-      controller: function($scope, $element) {
+      controller: ['$scope', '$element', function($scope, $element) {
         var swipeController = new SwipeableCardController({
         });
 
@@ -315,7 +315,7 @@
         this.swipeController = swipeController;
 
         //return swipeController;
-      }
+      }]
     }
   }])
 
