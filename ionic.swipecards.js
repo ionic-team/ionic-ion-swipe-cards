@@ -304,7 +304,7 @@
       template: '<div class="swipe-cards" ng-transclude></div>',
       transclude: true,
       scope: true,
-      controller: function($scope, $element) {
+      controller: ["$scope", "$element", function($scope, $element) {
         var swipeController = new SwipeableCardController({
         });
 
@@ -315,7 +315,7 @@
         this.swipeController = swipeController;
 
         //return swipeController;
-      }
+      }]
     }
   }])
 
